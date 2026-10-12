@@ -2,7 +2,7 @@ from os import makedirs
 from pathlib import Path
 from shutil import which
 from subprocess import run
-from sys import argv
+from sys import argv, exit
 
 from . import internals
 
@@ -32,9 +32,14 @@ class Executable:
         self.__output_dir: str | None = None
 
         if compiler is not None:
-            self.__compiler = compiler
+            self.__compiler: str = compiler
         else:
-            self.__compiler = internals.get_default_compiler()
+            system_compiler: str | None = internals.get_default_compiler()
+            if system_compiler is not None:
+                self.__compiler = system_compiler
+            else:
+                print("Error: No compiler found on system path")
+                exit(1)
 
         self.__source_files: list[str] = []
         self.__include_directories: list[str] = []
