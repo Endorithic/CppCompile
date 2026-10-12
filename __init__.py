@@ -47,7 +47,7 @@ class Executable:
         self.__library_directories: list[str] = []
 
         self.__flags: list[str] = []
-        self.__opt_level = 0
+        self.__opt_level: int = 0
 
     @property
     def opt_level(self) -> int:
