@@ -1,7 +1,7 @@
 from os import makedirs
 from pathlib import Path
 from shutil import which
-from subprocess import run
+from subprocess import CompletedProcess, run
 from sys import argv, exit
 
 from . import internals
@@ -157,4 +157,6 @@ class Executable:
         for library in self.__libraries:
             args.append(f"-l{library}")
 
-        run(args, check=False)
+        result: CompletedProcess[bytes] = run(args, check=False)
+        if result.returncode != 0:
+            exit(result.returncode)
