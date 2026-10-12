@@ -2,7 +2,7 @@ from os import makedirs
 from pathlib import Path
 from shutil import which
 from subprocess import CompletedProcess, run
-from sys import argv, exit
+from sys import argv, exit, stderr
 
 from . import internals
 
@@ -38,7 +38,7 @@ class Executable:
             if system_compiler is not None:
                 self.__compiler = system_compiler
             else:
-                print("Error: No compiler found on system path")
+                print("[E]: No compiler found on system path", file=stderr)
                 exit(1)
 
         self.__source_files: list[str] = []
@@ -60,7 +60,10 @@ class Executable:
     @opt_level.setter
     def opt_level(self, level: int) -> None:
         if not 0 <= level <= 3:
-            print("WARNING: Opt level must be in the range [0, 3]. Defaulting to 0.")
+            print(
+                "[W]: Opt level must be in the range [0, 3]. Defaulting to 0.",
+                file=stderr,
+            )
             self.__opt_level = 0
         else:
             self.__opt_level = level
@@ -78,7 +81,8 @@ class Executable:
             self.__compiler = program
         else:
             print(
-                f"[W]: Cannot find program {program}, defaulting to {self.__compiler}"
+                f"[W]: Cannot find program {program}, defaulting to {self.__compiler}",
+                file=stderr,
             )
 
     def add_include_dir(self, path: str) -> None:
